@@ -138,6 +138,13 @@ function check_product()
         echo "Couldn't locate the top of the tree.  Try setting TOP." >&2
         return
     fi
+    if (echo -n $1 | grep -q -e "^reloaded_") ; then
+        RELOADED_BUILD=$(echo -n $1 | sed -e 's/^reloaded_//g')
+    else
+        RELOADED_BUILD=
+    fi
+    export RELOADED_BUILD
+
         TARGET_PRODUCT=$1 \
         TARGET_BUILD_VARIANT= \
         TARGET_BUILD_TYPE= \
@@ -647,6 +654,8 @@ function lunch()
         echo "Invalid lunch combo: $selection"
         return 1
     fi
+
+    check_product $product
 
     TARGET_PRODUCT=$product \
     TARGET_BUILD_VARIANT=$variant \
